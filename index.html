@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>티스토리 랜덤 글</title>
+    <title>블로그 랜덤 글 모음</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         * {
             margin: 0;
@@ -59,6 +60,20 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-image {
+            max-width: 800px;
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            margin-bottom: 10px;
         }
 
         .header {
@@ -158,26 +173,35 @@
             .banner-item {
                 max-width: 100%;
             }
+
+            .logo-image {
+                max-width: 500px;
+                max-height: 150px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="banner-container">
-        <div class="banner">
-            <a href="https://susutk.com" class="banner-item" target="_blank">
-                <img src="777.png" alt="배너 이미지">
-            </a>
-            <a href="https://memojjang12345.tistory.com" class="banner-item" target="_blank">
-                <!-- 이미지 파일명: banner2.jpg -->
-            </a>
-            <a href="https://picturemaker.tistory.com" class="banner-item" target="_blank">
-                <!-- 이미지 파일명: banner3.jpg -->
-            </a>
-        </div>
-    </div>
     <div class="container">
+        <div class="logo-section">
+            <!-- 여기에 페이지 상징 이미지가 들어갑니다 -->
+            <img src="log.png" alt="페이지 로고" class="logo-image">
+        </div>
         <div class="header">
             <h1>티스토리 랜덤 글</h1>
+        </div>
+        <div class="banner-container">
+            <div class="banner">
+                <a href="https://susutk.com" class="banner-item" target="_blank">
+                    <img src="777.png" alt="배너 이미지">
+                </a>
+                <a href="https://memojjang12345.tistory.com" class="banner-item" target="_blank">
+                    <!-- 이미지 파일명: banner2.jpg -->
+                </a>
+                <a href="https://picturemaker.tistory.com" class="banner-item" target="_blank">
+                    <!-- 이미지 파일명: banner3.jpg -->
+                </a>
+            </div>
         </div>
         <div class="posts-grid" id="postsGrid">
             <!-- 여기에 포스트들이 동적으로 추가됩니다 -->
@@ -246,6 +270,15 @@
             postsGrid.innerHTML = '불러오는 중...';
 
             try {
+                // Fisher-Yates 셔플 알고리즘
+                function shuffleArray(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                    return array;
+                }
+
                 // 모든 블로그에서 동시에 데이터 가져오기
                 const allPosts = [];
                 for (const blog of blogs) {
@@ -253,26 +286,51 @@
                     const data = await res.json();
                     
                     if (data.items && data.items.length > 0) {
+                        console.log(`Blog ${blog.url} items:`, data.items.map(item => ({
+                            title: item.title,
+                            date: item.pubDate,
+                            link: item.link
+                        })));
+                        
                         // 각 블로그에서 지정된 개수의 포스트 선택
-                        const posts = data.items
-                            .sort(() => 0.5 - Math.random())
+                        const posts = shuffleArray([...data.items])
                             .slice(0, blog.count)
-                            .map(post => ({
-                                ...post,
-                                blogColor: blog.color
-                            }));
+                            .map(post => {
+                                // 날짜 검증 및 수정
+                                const postDate = new Date(post.pubDate);
+                                const currentDate = new Date();
+                                
+                                // 미래 날짜인 경우 현재 날짜로 수정
+                                if (postDate > currentDate) {
+                                    post.pubDate = currentDate.toISOString();
+                                }
+                                
+                                return {
+                                    ...post,
+                                    blogColor: blog.color
+                                };
+                            });
                         allPosts.push(...posts);
                     }
                 }
 
                 if (allPosts.length > 0) {
                     // 모든 포스트를 랜덤으로 섞기
-                    const shuffledPosts = allPosts.sort(() => 0.5 - Math.random());
+                    const shuffledPosts = shuffleArray(allPosts);
+                    console.log('Final shuffled posts:', shuffledPosts.map(post => ({
+                        title: post.title,
+                        date: post.pubDate,
+                        link: post.link
+                    })));
                     
                     postsGrid.innerHTML = shuffledPosts.map(post => `
                         <div class="post-card" style="background-color: ${post.blogColor}">
                             <a href="${post.link}" class="post-title" target="_blank">${post.title}</a>
-                            <div class="post-time">${new Date(post.pubDate).toLocaleDateString()}</div>
+                            <div class="post-time">${new Date(post.pubDate).toLocaleDateString('ko-KR', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit'
+                            })}</div>
                         </div>
                     `).join('');
                 } else {
