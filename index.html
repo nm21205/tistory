@@ -67,7 +67,7 @@
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: #333;
             margin-bottom: 10px;
         }
@@ -94,7 +94,7 @@
         }
 
         .post-title {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #333;
             text-decoration: none;
             flex-grow: 1;
@@ -102,7 +102,7 @@
         }
 
         .post-time {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #666;
             white-space: nowrap;
         }
@@ -116,7 +116,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: background-color 0.2s;
         }
 
@@ -130,13 +130,33 @@
             padding: 20px;
             background-color: #f8f9fa;
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             color: #666;
         }
 
         @media (max-width: 768px) {
-            .posts-grid {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .post-card {
+                padding: 12px;
+            }
+
+            .post-title {
+                font-size: 0.9rem;
+            }
+
+            .post-time {
+                font-size: 0.75rem;
+            }
+
+            .banner-item {
+                max-width: 100%;
             }
         }
     </style>
@@ -204,17 +224,17 @@
         const blogs = [
             {
                 url: "https://manaw-3.tistory.com/rss",
-                count: 5,
+                count: 10,
                 color: "#E3F2FD"  // 연한 파란색
             },
             {
                 url: "https://memojjang12345.tistory.com/rss",
-                count: 20,
+                count: 25,
                 color: "#F3E5F5"  // 연한 보라색
             },
             {
                 url: "https://picturemaker.tistory.com/rss",
-                count: 20,
+                count: 25,
                 color: "#E8F5E9"  // 연한 초록색
             }
         ];
