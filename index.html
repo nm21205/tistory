@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티스토리 랜덤 글</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .posts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-card:hover {
+            transform: translateX(5px);
+        }
+
+        .post-title {
+            font-size: 1.1rem;
+            color: #333;
+            text-decoration: none;
+            flex-grow: 1;
+            margin-right: 15px;
+        }
+
+        .post-time {
+            font-size: 0.9rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .refresh-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .refresh-button:hover {
+            background-color: #444;
+        }
+
+        .visitor-counter {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>티스토리 랜덤 글</h1>
+        </div>
+        <div class="posts-grid" id="postsGrid">
+            <!-- 여기에 포스트들이 동적으로 추가됩니다 -->
+        </div>
+        <button class="refresh-button" onclick="fetchRandomPosts()">새로고침</button>
+        <div class="visitor-counter" id="visitorCounter">
+            <!-- 방문자 수가 여기에 표시됩니다 -->
+        </div>
+    </div>
+
+    <script>
+        // 방문자 카운터 함수
+        function updateVisitorCount() {
+            const today = new Date().toDateString();
+            const counter = document.getElementById('visitorCounter');
+            
+            // 로컬 스토리지에서 데이터 가져오기
+            let visitorData = JSON.parse(localStorage.getItem('visitorData')) || {
+                total: 0,
+                lastVisit: '',
+                todayCount: 0
+            };
+
+            // 오늘 날짜가 바뀌었는지 확인
+            if (visitorData.lastVisit !== today) {
+                visitorData.todayCount = 0;
+                visitorData.lastVisit = today;
+            }
+
+            // 방문자 수 증가
+            visitorData.todayCount++;
+            visitorData.total++;
+
+            // 로컬 스토리지에 저장
+            localStorage.setItem('visitorData', JSON.stringify(visitorData));
+
+            // 화면에 표시
+            counter.innerHTML = `오늘 방문자 ${visitorData.todayCount} / 총 방문자 ${visitorData.total}`;
+        }
+
+        // 페이지 로드 시 방문자 수 업데이트
+        updateVisitorCount();
+
+        const blogs = [
+            {
+                url: "https://manaw-3.tistory.com/rss",
+                count: 5,
+                color: "#E3F2FD"  // 연한 파란색
+            },
+            {
+                url: "https://memojjang12345.tistory.com/rss",
+                count: 20,
+                color: "#F3E5F5"  // 연한 보라색
+            },
+            {
+                url: "https://picturemaker.tistory.com/rss",
+                count: 20,
+                color: "#E8F5E9"  // 연한 초록색
+            }
+        ];
+
+        const proxy = "https://api.rss2json.com/v1/api.json?rss_url=";
+
+        async function fetchRandomPosts() {
+            const postsGrid = document.getElementById('postsGrid');
+            postsGrid.innerHTML = '불러오는 중...';
+
+            try {
+                // 모든 블로그에서 동시에 데이터 가져오기
+                const allPosts = [];
+                for (const blog of blogs) {
+                    const res = await fetch(proxy + encodeURIComponent(blog.url));
+                    const data = await res.json();
+                    
+                    if (data.items && data.items.length > 0) {
+                        // 각 블로그에서 지정된 개수의 포스트 선택
+                        const posts = data.items
+                            .sort(() => 0.5 - Math.random())
+                            .slice(0, blog.count)
+                            .map(post => ({
+                                ...post,
+                                blogColor: blog.color
+                            }));
+                        allPosts.push(...posts);
+                    }
+                }
+
+                if (allPosts.length > 0) {
+                    // 모든 포스트를 랜덤으로 섞기
+                    const shuffledPosts = allPosts.sort(() => 0.5 - Math.random());
+                    
+                    postsGrid.innerHTML = shuffledPosts.map(post => `
+                        <div class="post-card" style="background-color: ${post.blogColor}">
+                            <a href="${post.link}" class="post-title" target="_blank">${post.title}</a>
+                            <div class="post-time">${new Date(post.pubDate).toLocaleDateString()}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    postsGrid.innerHTML = '글이 없습니다.';
+                }
+            } catch (error) {
+                postsGrid.innerHTML = '오류가 발생했습니다.';
+                console.error('Error:', error);
+            }
+        }
+
+        // 페이지 로드 시 초기 데이터 가져오기
+        fetchRandomPosts();
+    </script>
+</body>
+</html> 
