@@ -36,30 +36,23 @@
         }
 
         .banner-item {
-            height: 60px;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 0.9rem;
-            padding: 0 20px;
-            text-decoration: none;
-            transition: background-color 0.2s;
             width: 100%;
             max-width: 728px;
             margin: 0 auto;
-        }
-
-        .banner-item img {
-            max-width: 100%;
-            height: auto;
-            object-fit: contain;
+            display: block;
+            text-decoration: none;
+            transition: opacity 0.2s;
         }
 
         .banner-item:hover {
-            background-color: #e0e0e0;
+            opacity: 0.9;
+        }
+
+        .banner-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
         }
 
         .container {
@@ -151,8 +144,8 @@
 <body>
     <div class="banner-container">
         <div class="banner">
-            <a href="https://manaw-3.tistory.com" class="banner-item" target="_blank">
-                <!-- 이미지 파일명: banner1.jpg -->
+            <a href="https://susutk.com" class="banner-item" target="_blank">
+                <img src="777.png" alt="배너 이미지">
             </a>
             <a href="https://memojjang12345.tistory.com" class="banner-item" target="_blank">
                 <!-- 이미지 파일명: banner2.jpg -->
