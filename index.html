@@ -18,6 +18,50 @@
             line-height: 1.6;
         }
 
+        .banner-container {
+            width: 100%;
+            background-color: white;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .banner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .banner-item {
+            height: 60px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 0 20px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            width: 100%;
+            max-width: 728px;
+            margin: 0 auto;
+        }
+
+        .banner-item img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .banner-item:hover {
+            background-color: #e0e0e0;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -105,6 +149,19 @@
     </style>
 </head>
 <body>
+    <div class="banner-container">
+        <div class="banner">
+            <a href="https://manaw-3.tistory.com" class="banner-item" target="_blank">
+                <!-- 이미지 파일명: banner1.jpg -->
+            </a>
+            <a href="https://memojjang12345.tistory.com" class="banner-item" target="_blank">
+                <!-- 이미지 파일명: banner2.jpg -->
+            </a>
+            <a href="https://picturemaker.tistory.com" class="banner-item" target="_blank">
+                <!-- 이미지 파일명: banner3.jpg -->
+            </a>
+        </div>
+    </div>
     <div class="container">
         <div class="header">
             <h1>티스토리 랜덤 글</h1>
