@@ -146,16 +146,6 @@
             background-color: #444;
         }
 
-        .visitor-counter {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -214,44 +204,9 @@
             <!-- 여기에 포스트들이 동적으로 추가됩니다 -->
         </div>
         <button class="refresh-button" onclick="fetchRandomPosts()">새로고침</button>
-        <div class="visitor-counter" id="visitorCounter">
-            <!-- 방문자 수가 여기에 표시됩니다 -->
-        </div>
     </div>
 
     <script>
-        // 방문자 카운터 함수
-        function updateVisitorCount() {
-            const today = new Date().toDateString();
-            const counter = document.getElementById('visitorCounter');
-            
-            // 로컬 스토리지에서 데이터 가져오기
-            let visitorData = JSON.parse(localStorage.getItem('visitorData')) || {
-                total: 0,
-                lastVisit: '',
-                todayCount: 0
-            };
-
-            // 오늘 날짜가 바뀌었는지 확인
-            if (visitorData.lastVisit !== today) {
-                visitorData.todayCount = 0;
-                visitorData.lastVisit = today;
-            }
-
-            // 방문자 수 증가
-            visitorData.todayCount++;
-            visitorData.total++;
-
-            // 로컬 스토리지에 저장
-            localStorage.setItem('visitorData', JSON.stringify(visitorData));
-
-            // 화면에 표시
-            counter.innerHTML = `오늘 방문자 ${visitorData.todayCount} / 총 방문자 ${visitorData.total}`;
-        }
-
-        // 페이지 로드 시 방문자 수 업데이트
-        updateVisitorCount();
-
         const blogs = [
             {
                 url: "https://manaw-3.tistory.com/rss",
